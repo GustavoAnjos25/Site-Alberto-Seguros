@@ -1,0 +1,134 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-white text-slate-800;
+    font-family: 'Montserrat', system-ui, sans-serif;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 bg-primary text-white font-semibold text-sm uppercase tracking-wide px-7 py-3.5 rounded-2xl transition-all duration-300;
+    box-shadow: 0 4px 14px rgba(26, 75, 140, 0.3);
+  }
+
+  .btn-primary:hover {
+    @apply bg-primary-dark -translate-y-0.5;
+    box-shadow: 0 8px 25px rgba(26, 75, 140, 0.4);
+  }
+
+  .btn-primary:active {
+    @apply translate-y-0;
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 bg-transparent text-white font-semibold text-sm border-2 border-white/30 px-8 py-3.5 rounded-2xl transition-all duration-300;
+  }
+
+  .btn-outline:hover {
+    @apply bg-white/10 border-white/50;
+  }
+
+  .form-input {
+    @apply w-full px-4 py-3.5 border-2 border-slate-200 rounded-xl text-[15px] text-slate-800 bg-white transition-all duration-200 outline-none;
+  }
+
+  .form-input::placeholder {
+    @apply text-slate-400;
+  }
+
+  .form-input:focus {
+    @apply border-primary;
+    box-shadow: 0 0 0 4px rgba(26, 75, 140, 0.1);
+  }
+
+  .form-input.error {
+    @apply border-red-500;
+  }
+
+  .form-input.error:focus {
+    box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
+  }
+
+  .form-label {
+    @apply block text-[13px] font-semibold text-slate-700 mb-2 uppercase tracking-wide;
+  }
+
+  .insurance-card {
+    @apply relative p-4 border-2 border-slate-200 rounded-xl text-center cursor-pointer transition-all duration-200 bg-white;
+  }
+
+  .insurance-card:hover {
+    @apply border-primary-light bg-slate-50;
+  }
+
+  .insurance-card.selected {
+    @apply border-primary bg-primary/5;
+    box-shadow: 0 0 0 3px rgba(26, 75, 140, 0.1);
+  }
+
+  .radio-option label {
+    @apply inline-flex items-center gap-2 px-5 py-2.5 border-2 border-slate-200 rounded-xl text-sm font-medium text-slate-600 cursor-pointer transition-all duration-200 bg-white;
+  }
+
+  .radio-option label::before {
+    content: '';
+    @apply w-[18px] h-[18px] border-2 border-slate-300 rounded-full transition-all duration-200 flex-shrink-0;
+  }
+
+  .radio-option input:checked + label {
+    @apply border-primary bg-primary/5 text-primary;
+  }
+
+  .radio-option input:checked + label::before {
+    @apply border-primary bg-primary;
+    box-shadow: inset 0 0 0 3px white;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0); }
+  to { transform: scale(1); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.5s ease 0.2s both;
+}
