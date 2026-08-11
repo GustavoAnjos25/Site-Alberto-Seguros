@@ -30,12 +30,9 @@ export default function Hero() {
 
           <div className="flex flex-wrap gap-8 mb-10">
             {[
-              { icon: 'user', text: 'Atendimento
-personalizado' },
-              { icon: 'shield', text: 'As melhores
-seguradoras' },
-              { icon: 'users', text: 'Soluções para
-você e sua família' },
+              { icon: 'user', text: 'Atendimento\npersonalizado' },
+              { icon: 'shield', text: 'As melhores\nseguradoras' },
+              { icon: 'users', text: 'Soluções para\nvocê e sua família' },
             ].map((f) => (
               <div key={f.icon} className="flex items-center gap-3 text-white/90 text-sm font-medium">
                 <div className="w-9 h-9 bg-white/15 rounded-lg flex items-center justify-center flex-shrink-0">
