@@ -5,14 +5,14 @@ import { formatCPF, formatCEP, formatPhone, formatCNPJ, validateCPF, validateCEP
 import { sendCotacao } from '../services/emailService.js'
 
 const insuranceTypes = [
-  { id: 'auto', label: 'Automóvel', icon: 'car' },
-  { id: 'moto', label: 'Moto', icon: 'moto' },
-  { id: 'residencial', label: 'Residencial', icon: 'home' },
-  { id: 'vida', label: 'Vida', icon: 'heart' },
-  { id: 'saude', label: 'Saúde', icon: 'health' },
-  { id: 'viagem', label: 'Viagem', icon: 'plane' },
-  { id: 'empresarial', label: 'Empresarial', icon: 'building' },
-  { id: 'outro', label: 'Outro', icon: 'dots' },
+  { id: 'auto', label: 'Automóvel' },
+  { id: 'moto', label: 'Moto' },
+  { id: 'residencial', label: 'Residencial' },
+  { id: 'vida', label: 'Vida' },
+  { id: 'saude', label: 'Saúde' },
+  { id: 'viagem', label: 'Viagem' },
+  { id: 'empresarial', label: 'Empresarial' },
+  { id: 'outro', label: 'Outro' },
 ]
 
 const estadoCivilOptions = ['Solteiro', 'Casado', 'União Estável', 'Divorciado', 'Viúvo']
@@ -20,22 +20,91 @@ const simNaoOptions = ['Sim', 'Não']
 const tipoImovelOptions = ['Casa', 'Apartamento', 'Sobrado', 'Geminado']
 const utilizacaoOptions = ['Habitual', 'Veraneio']
 
-function InsuranceIcon({ type }) {
-  const icons = {
-    car: <path d="M14 16H9m10 0h3v-3.15a1 1 0 0 0-.84-.99L16 11l-2.7-3.6a1 1 0 0 0-.8-.4H5.24a2 2 0 0 0-1.8 1.1l-.8 1.63A6 6 0 0 0 2 12.42V16h2"/><circle cx="6.5" cy="16.5" r="2.5"/><circle cx="16.5" cy="16.5" r="2.5"/>,
-    moto: <><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5V14l-3-3 4-3 2 3h2"/></>,
-    home: <><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></>,
-    heart: <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>,
-    health: <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>,
-    plane: <><path d="M2 12h20"/><path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-6"/><path d="M12 2v10"/><path d="m12 2 4 4"/><path d="m12 2-4 4"/></>,
-    building: <><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></>,
-    dots: <><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></>,
-  }
+function CarIcon() {
   return (
-    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      {icons[type]}
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
+      <path d="M14 16H9m10 0h3v-3.15a1 1 0 0 0-.84-.99L16 11l-2.7-3.6a1 1 0 0 0-.8-.4H5.24a2 2 0 0 0-1.8 1.1l-.8 1.63A6 6 0 0 0 2 12.42V16h2" />
+      <circle cx="6.5" cy="16.5" r="2.5" />
+      <circle cx="16.5" cy="16.5" r="2.5" />
     </svg>
   )
+}
+
+function MotoIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
+      <circle cx="5.5" cy="17.5" r="3.5" />
+      <circle cx="18.5" cy="17.5" r="3.5" />
+      <path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5V14l-3-3 4-3 2 3h2" />
+    </svg>
+  )
+}
+
+function HomeIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
+      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+      <polyline points="9 22 9 12 15 12 15 22" />
+    </svg>
+  )
+}
+
+function HeartIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
+      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+    </svg>
+  )
+}
+
+function HealthIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
+      <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+    </svg>
+  )
+}
+
+function PlaneIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
+      <path d="M2 12h20" />
+      <path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-6" />
+      <path d="M12 2v10" />
+      <path d="m12 2 4 4" />
+      <path d="m12 2-4 4" />
+    </svg>
+  )
+}
+
+function BuildingIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
+      <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+      <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+    </svg>
+  )
+}
+
+function DotsIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
+      <circle cx="12" cy="12" r="1" />
+      <circle cx="19" cy="12" r="1" />
+      <circle cx="5" cy="12" r="1" />
+    </svg>
+  )
+}
+
+const iconMap = {
+  auto: CarIcon,
+  moto: MotoIcon,
+  residencial: HomeIcon,
+  vida: HeartIcon,
+  saude: HealthIcon,
+  viagem: PlaneIcon,
+  empresarial: BuildingIcon,
+  outro: DotsIcon,
 }
 
 export default function QuoteSection() {
@@ -48,20 +117,13 @@ export default function QuoteSection() {
 
   const [formData, setFormData] = useState({
     nome: '', cpf: '', cep: '', whatsapp: '', email: '',
-    // Auto
     placa_auto: '', estado_civil_auto: '', filhos_auto: '', possui_seguro_auto: '',
-    // Moto
     placa_moto: '', estado_civil_moto: '', possui_seguro_moto: '',
-    // Residencial
     numero: '', complemento: '', tipo_imovel: '', utilizacao: '',
-    // Vida
     data_nascimento_vida: '', profissao: '',
-    // Saude
     tipo_pessoa_saude: '', quantidade_vidas: '', data_nascimento_titular: '',
     cnpj_saude: '', quantidade_funcionarios: '',
-    // Viagem
     pais_destino: '', data_ida: '', data_volta: '', quantidade_viajantes: '',
-    // Empresarial
     nome_empresa: '', cnpj_empresarial: '', ramo_atividade: '',
   })
 
@@ -84,7 +146,6 @@ export default function QuoteSection() {
     if (!formData.cep || !validateCEP(formData.cep)) newErrors.cep = 'CEP inválido'
     if (!formData.whatsapp || !validatePhone(formData.whatsapp)) newErrors.whatsapp = 'WhatsApp inválido'
 
-    // Validações específicas
     if (tipoSeguro === 'auto') {
       if (!formData.placa_auto) newErrors.placa_auto = 'Placa é obrigatória'
       if (!formData.estado_civil_auto) newErrors.estado_civil_auto = 'Estado civil é obrigatório'
@@ -134,7 +195,7 @@ export default function QuoteSection() {
     setLoading(true)
     try {
       const payload = { ...formData, tipo_seguro: tipoSeguro }
-        const data = await sendCotacao(payload)
+      const data = await sendCotacao(payload)
       if (data.success) {
         setSubmitted(true)
         toast.success('Cotação enviada com sucesso!')
@@ -193,7 +254,6 @@ export default function QuoteSection() {
   return (
     <section className="relative z-10 -mt-16 px-6" id="cotacao">
       <div className="max-w-7xl mx-auto bg-white rounded-2xl shadow-card overflow-hidden">
-        {/* Header */}
         <div className="text-center py-12 px-6 bg-gradient-to-b from-slate-50 to-white">
           <h2 className="text-3xl font-bold text-slate-900 mb-2">Solicite sua Cotação</h2>
           <p className="text-slate-500 max-w-xl mx-auto">
@@ -205,7 +265,7 @@ export default function QuoteSection() {
           <div className="text-center py-20 px-6 animate-fade-in">
             <div className="w-20 h-20 bg-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6 animate-scale-in">
               <svg className="w-10 h-10 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-                <polyline points="20 6 9 17 4 12"/>
+                <polyline points="20 6 9 17 4 12" />
               </svg>
             </div>
             <h3 className="text-2xl font-bold text-slate-900 mb-3">Sua solicitação foi enviada com sucesso!</h3>
@@ -218,35 +278,35 @@ export default function QuoteSection() {
           </div>
         ) : (
           <div className="grid lg:grid-cols-[1fr_380px]">
-            {/* Form */}
             <div className="p-10 lg:p-12">
               <form onSubmit={handleSubmit} noValidate>
-                {/* Tipo de Seguro */}
                 <div className="mb-6">
                   <label className="form-label">Qual seguro você procura? <span className="text-red-500">*</span></label>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    {insuranceTypes.map((type) => (
-                      <div
-                        key={type.id}
-                        className={`insurance-card ${tipoSeguro === type.id ? 'selected' : ''}`}
-                        onClick={() => handleSelectInsurance(type.id)}
-                        data-pixel={`seguro_${type.id}`}
-                      >
-                        <div className={`w-10 h-10 mx-auto mb-2 rounded-lg flex items-center justify-center transition-colors ${
-                          tipoSeguro === type.id ? 'bg-primary text-white' : 'bg-slate-100 text-slate-500'
-                        }`}>
-                          <InsuranceIcon type={type.icon} />
+                    {insuranceTypes.map((type) => {
+                      const Icon = iconMap[type.id]
+                      return (
+                        <div
+                          key={type.id}
+                          className={`insurance-card ${tipoSeguro === type.id ? 'selected' : ''}`}
+                          onClick={() => handleSelectInsurance(type.id)}
+                          data-pixel={`seguro_${type.id}`}
+                        >
+                          <div className={`w-10 h-10 mx-auto mb-2 rounded-lg flex items-center justify-center transition-colors ${
+                            tipoSeguro === type.id ? 'bg-primary text-white' : 'bg-slate-100 text-slate-500'
+                          }`}>
+                            <Icon />
+                          </div>
+                          <div className={`text-xs font-semibold uppercase tracking-wide ${tipoSeguro === type.id ? 'text-primary' : 'text-slate-600'}`}>
+                            {type.label}
+                          </div>
                         </div>
-                        <div className={`text-xs font-semibold uppercase tracking-wide ${tipoSeguro === type.id ? 'text-primary' : 'text-slate-600'}`}>
-                          {type.label}
-                        </div>
-                      </div>
-                    ))}
+                      )
+                    })}
                   </div>
                   {errors.tipo_seguro && <p className="text-red-500 text-sm mt-2">{errors.tipo_seguro}</p>}
                 </div>
 
-                {/* Campos Comuns */}
                 <div className="mb-5">
                   <label className="form-label">Nome Completo <span className="text-red-500">*</span></label>
                   <input {...inputProps('nome')} placeholder="Digite seu nome completo" />
@@ -278,7 +338,6 @@ export default function QuoteSection() {
                   </div>
                 </div>
 
-                {/* Campos Dinâmicos: Automóvel */}
                 {tipoSeguro === 'auto' && (
                   <div className="animate-fade-in p-6 bg-slate-50 rounded-xl border border-slate-200 mb-5">
                     <h4 className="flex items-center gap-2 text-sm font-bold text-primary uppercase tracking-wide mb-4">
@@ -327,7 +386,6 @@ export default function QuoteSection() {
                   </div>
                 )}
 
-                {/* Campos Dinâmicos: Moto */}
                 {tipoSeguro === 'moto' && (
                   <div className="animate-fade-in p-6 bg-slate-50 rounded-xl border border-slate-200 mb-5">
                     <h4 className="flex items-center gap-2 text-sm font-bold text-primary uppercase tracking-wide mb-4">
@@ -365,7 +423,6 @@ export default function QuoteSection() {
                   </div>
                 )}
 
-                {/* Campos Dinâmicos: Residencial */}
                 {tipoSeguro === 'residencial' && (
                   <div className="animate-fade-in p-6 bg-slate-50 rounded-xl border border-slate-200 mb-5">
                     <h4 className="flex items-center gap-2 text-sm font-bold text-primary uppercase tracking-wide mb-4">
@@ -408,7 +465,6 @@ export default function QuoteSection() {
                   </div>
                 )}
 
-                {/* Campos Dinâmicos: Vida */}
                 {tipoSeguro === 'vida' && (
                   <div className="animate-fade-in p-6 bg-slate-50 rounded-xl border border-slate-200 mb-5">
                     <h4 className="flex items-center gap-2 text-sm font-bold text-primary uppercase tracking-wide mb-4">
@@ -430,7 +486,6 @@ export default function QuoteSection() {
                   </div>
                 )}
 
-                {/* Campos Dinâmicos: Saúde */}
                 {tipoSeguro === 'saude' && (
                   <div className="animate-fade-in p-6 bg-slate-50 rounded-xl border border-slate-200 mb-5">
                     <h4 className="flex items-center gap-2 text-sm font-bold text-primary uppercase tracking-wide mb-4">
@@ -489,7 +544,6 @@ export default function QuoteSection() {
                   </div>
                 )}
 
-                {/* Campos Dinâmicos: Viagem */}
                 {tipoSeguro === 'viagem' && (
                   <div className="animate-fade-in p-6 bg-slate-50 rounded-xl border border-slate-200 mb-5">
                     <h4 className="flex items-center gap-2 text-sm font-bold text-primary uppercase tracking-wide mb-4">
@@ -513,7 +567,7 @@ export default function QuoteSection() {
                         {errors.data_volta && <p className="text-red-500 text-sm mt-2">{errors.data_volta}</p>}
                       </div>
                       <div>
-                        <label className="form-label">Quantidade de Viajantes <span className="text-red-500">*</span></label>
+                        <label className="form-label">Qtd. Viajantes <span className="text-red-500">*</span></label>
                         <input {...inputProps('quantidade_viajantes')} type="number" min="1" placeholder="1" />
                         {errors.quantidade_viajantes && <p className="text-red-500 text-sm mt-2">{errors.quantidade_viajantes}</p>}
                       </div>
@@ -521,7 +575,6 @@ export default function QuoteSection() {
                   </div>
                 )}
 
-                {/* Campos Dinâmicos: Empresarial */}
                 {tipoSeguro === 'empresarial' && (
                   <div className="animate-fade-in p-6 bg-slate-50 rounded-xl border border-slate-200 mb-5">
                     <h4 className="flex items-center gap-2 text-sm font-bold text-primary uppercase tracking-wide mb-4">
@@ -548,7 +601,6 @@ export default function QuoteSection() {
                   </div>
                 )}
 
-                {/* Submit */}
                 <button
                   type="submit"
                   disabled={loading}
@@ -557,8 +609,8 @@ export default function QuoteSection() {
                   {loading ? (
                     <>
                       <svg className="animate-spin w-5 h-5" viewBox="0 0 24 24" fill="none">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                       </svg>
                       Enviando...
                     </>
@@ -568,14 +620,14 @@ export default function QuoteSection() {
                 </button>
                 <div className="flex items-center justify-center gap-2 mt-4 text-sm text-slate-400">
                   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                   </svg>
                   Seus dados estão seguros conosco.
                 </div>
               </form>
             </div>
 
-            {/* Differentials Sidebar */}
             <Differentials />
           </div>
         )}
@@ -585,59 +637,65 @@ export default function QuoteSection() {
 }
 
 function Differentials() {
-  const items = [
-    {
-      icon: 'award',
-      title: 'Mais de 30 anos de experiência',
-      desc: 'Tradição e know-how no mercado segurador.',
-    },
-    {
-      icon: 'user-check',
-      title: 'Atendimento personalizado',
-      desc: 'Cada cliente é único e recebe atenção exclusiva.',
-    },
-    {
-      icon: 'shield-check',
-      title: 'Principais seguradoras do mercado',
-      desc: 'Parcerias com as melhores do Brasil.',
-    },
-    {
-      icon: 'file-text',
-      title: 'Cotação sem compromisso',
-      desc: 'Receba sua proposta e decida com tranquilidade.',
-    },
-  ]
-
-  const iconMap = {
-    award: <path d="M12 8a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/><path d="M12 2v2"/><path d="M12 8v14"/><path d="m4.93 10.93 1.41 1.41"/><path d="m17.66 10.93-1.41 1.41"/><path d="M6 18l-2 4h16l-2-4"/>,
-    'user-check': <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><polyline points="16 11 18 13 22 9"/>,
-    'shield-check': <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 12 15 16 10"/>,
-    'file-text': <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/>,
-  }
-
   return (
     <div className="hidden lg:flex flex-col justify-center p-10 bg-gradient-to-b from-primary to-primary-dark text-white">
       <h3 className="text-xl font-bold mb-8 leading-snug">
-        Por que escolher a<br/>Alberto Seguros?
+        Por que escolher a<br />Alberto Seguros?
       </h3>
-      {items.map((item) => (
-        <div key={item.title} className="flex items-start gap-4 mb-6">
-          <div className="w-11 h-11 bg-white/15 rounded-lg flex items-center justify-center flex-shrink-0 backdrop-blur-sm">
-            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              {iconMap[item.icon]}
-            </svg>
-          </div>
-          <div>
-            <h4 className="text-sm font-semibold mb-1">{item.title}</h4>
-            <p className="text-xs text-white/75 leading-relaxed">{item.desc}</p>
-          </div>
+
+      <div className="flex items-start gap-4 mb-6">
+        <div className="w-11 h-11 bg-white/15 rounded-lg flex items-center justify-center flex-shrink-0 backdrop-blur-sm">
+          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <circle cx="12" cy="8" r="7" /><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88" />
+          </svg>
         </div>
-      ))}
+        <div>
+          <h4 className="text-sm font-semibold mb-1">Mais de 30 anos de experiência</h4>
+          <p className="text-xs text-white/75 leading-relaxed">Tradição e know-how no mercado segurador.</p>
+        </div>
+      </div>
+
+      <div className="flex items-start gap-4 mb-6">
+        <div className="w-11 h-11 bg-white/15 rounded-lg flex items-center justify-center flex-shrink-0 backdrop-blur-sm">
+          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><polyline points="16 11 18 13 22 9" />
+          </svg>
+        </div>
+        <div>
+          <h4 className="text-sm font-semibold mb-1">Atendimento personalizado</h4>
+          <p className="text-xs text-white/75 leading-relaxed">Cada cliente é único e recebe atenção exclusiva.</p>
+        </div>
+      </div>
+
+      <div className="flex items-start gap-4 mb-6">
+        <div className="w-11 h-11 bg-white/15 rounded-lg flex items-center justify-center flex-shrink-0 backdrop-blur-sm">
+          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><polyline points="9 12 12 15 16 10" />
+          </svg>
+        </div>
+        <div>
+          <h4 className="text-sm font-semibold mb-1">Principais seguradoras do mercado</h4>
+          <p className="text-xs text-white/75 leading-relaxed">Parcerias com as melhores do Brasil.</p>
+        </div>
+      </div>
+
+      <div className="flex items-start gap-4 mb-6">
+        <div className="w-11 h-11 bg-white/15 rounded-lg flex items-center justify-center flex-shrink-0 backdrop-blur-sm">
+          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /><line x1="10" y1="9" x2="8" y2="9" />
+          </svg>
+        </div>
+        <div>
+          <h4 className="text-sm font-semibold mb-1">Cotação sem compromisso</h4>
+          <p className="text-xs text-white/75 leading-relaxed">Receba sua proposta e decida com tranquilidade.</p>
+        </div>
+      </div>
+
       <div className="mt-6 pt-6 border-t border-white/20">
         <div className="flex gap-1 mb-2">
-          {[1,2,3,4,5].map(i => (
+          {[1, 2, 3, 4, 5].map(i => (
             <svg key={i} className="w-5 h-5 text-amber-400 fill-amber-400" viewBox="0 0 24 24">
-              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
             </svg>
           ))}
         </div>
