@@ -57,6 +57,10 @@
     box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
   }
 
+  .form-input-compact {
+    @apply px-3.5 py-3 text-sm;
+  }
+
   .form-label {
     @apply block text-[13px] font-semibold text-slate-700 mb-2 uppercase tracking-wide;
   }

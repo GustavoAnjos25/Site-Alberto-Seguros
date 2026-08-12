@@ -37,13 +37,17 @@ function buildEmailBody(data) {
 
   if (tipo_seguro === 'auto' || tipo_seguro === 'moto') {
     const prefix = tipo_seguro === 'auto' ? 'auto' : 'moto';
+    const zeroKm = rest[`veiculo_0km_${prefix}`];
     body += formatSection(
       tipo_seguro === 'auto' ? 'Informações do Veículo' : 'Informações da Moto',
       {
-        'Placa': rest[`placa_${prefix}`],
+        'Veículo 0 km': zeroKm,
+        'Chassi': zeroKm === 'Sim' ? rest[`chassi_${prefix}`] : undefined,
+        'Placa': zeroKm === 'Não' ? rest[`placa_${prefix}`] : undefined,
         'Estado Civil': rest[`estado_civil_${prefix}`],
         'Filhos menores de 26 anos': rest.filhos_auto,
         'Já possui seguro': rest[`possui_seguro_${prefix}`],
+        'Bônus': rest[`bonus_${prefix}`],
       }
     );
   }
@@ -52,6 +56,8 @@ function buildEmailBody(data) {
     body += formatSection('Informações do Imóvel', {
       'Número': rest.numero, 'Complemento': rest.complemento,
       'Tipo do Imóvel': rest.tipo_imovel, 'Utilização': rest.utilizacao,
+      'Já possui seguro': rest.possui_seguro_residencial,
+      'Bônus': rest.bonus_residencial,
     });
   }
 

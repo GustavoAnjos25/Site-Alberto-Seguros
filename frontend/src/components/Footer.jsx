@@ -1,3 +1,16 @@
+import { Link } from 'react-router-dom'
+import Logo from './Logo'
+
+const navLinks = [
+  { label: 'Início', to: '/' },
+  { label: 'A Empresa', to: '/empresa' },
+  { label: 'Seguros / Cotações', to: '/seguros' },
+  { label: 'Parceiros', to: '/parceiros' },
+  { label: 'Contato', to: '/contato' },
+]
+
+const insuranceLinks = ['Automóvel', 'Moto', 'Residencial', 'Vida', 'Saúde', 'Viagem', 'Empresarial']
+
 export default function Footer() {
   return (
     <footer className="bg-slate-900 text-white pt-16 pb-6 px-6">
@@ -5,15 +18,9 @@ export default function Footer() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
           {/* Brand */}
           <div className="sm:col-span-2 lg:col-span-1">
-            <a href="#" className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white font-extrabold text-2xl">
-                A
-              </div>
-              <div className="flex flex-col">
-                <span className="font-bold text-lg tracking-wide text-white leading-tight">ALBERTO</span>
-                <span className="text-xs font-medium tracking-[2px] uppercase text-slate-400">SEGUROS</span>
-              </div>
-            </a>
+            <Link to="/" className="inline-flex items-center gap-3 mb-4">
+              <Logo theme="light" size="sm" />
+            </Link>
             <p className="text-sm text-slate-400 leading-relaxed">
               Há mais de 30 anos protegendo o que é mais importante para você, sua família e sua empresa.
             </p>
@@ -23,9 +30,9 @@ export default function Footer() {
           <div>
             <h4 className="text-sm font-bold uppercase tracking-wider mb-5">Navegação</h4>
             <ul className="space-y-3">
-              {['Home', 'A Empresa', 'Planos e Seguros', 'Parceiros', 'Fale Conosco'].map(link => (
-                <li key={link}>
-                  <a href="#" className="text-sm text-slate-400 hover:text-white transition-colors">{link}</a>
+              {navLinks.map(link => (
+                <li key={link.label}>
+                  <Link to={link.to} className="text-sm text-slate-400 hover:text-white transition-colors">{link.label}</Link>
                 </li>
               ))}
             </ul>
@@ -34,9 +41,9 @@ export default function Footer() {
           <div>
             <h4 className="text-sm font-bold uppercase tracking-wider mb-5">Seguros</h4>
             <ul className="space-y-3">
-              {['Automóvel', 'Moto', 'Residencial', 'Vida', 'Saúde', 'Viagem', 'Empresarial'].map(link => (
+              {insuranceLinks.map(link => (
                 <li key={link}>
-                  <a href="#" className="text-sm text-slate-400 hover:text-white transition-colors">{link}</a>
+                  <Link to="/seguros" className="text-sm text-slate-400 hover:text-white transition-colors">{link}</Link>
                 </li>
               ))}
             </ul>
@@ -48,9 +55,9 @@ export default function Footer() {
               <li>Joinville - SC</li>
               <li>contato@albertoseguros.com</li>
               <li className="pt-2">
-                <a href="#cotacao" className="btn-primary text-xs py-2.5 px-5">
+                <Link to="/seguros" className="btn-primary text-xs py-2.5 px-5">
                   Solicitar Cotação
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
