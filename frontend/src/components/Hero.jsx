@@ -1,11 +1,24 @@
-import Logo from './Logo'
 import QuoteForm from './QuoteForm'
+
+/**
+ * FOTOGRAFIA UTILIZADA NO HERO — origem e licença
+ * ------------------------------------------------
+ * Banco de imagens: Unsplash
+ * Página original:  https://unsplash.com/photos/man-in-white-shirt-carrying-girl-in-gray-shirt-Wr3comVZJxU
+ * Fotógrafo:         Nathan Dumlao (@nate_dumlao) — https://unsplash.com/@nate_dumlao
+ * Licença:           Unsplash License — uso comercial livre, sem necessidade de atribuição
+ *                     https://unsplash.com/license
+ * Arquivo servido diretamente do CDN oficial do Unsplash (images.unsplash.com).
+ * Consulte também /IMAGE_CREDITS.md na raiz do projeto.
+ */
+const HERO_IMAGE_URL =
+  'https://images.unsplash.com/photo-1609220136736-443140cffec6?auto=format&fit=crop&w=1200&q=80'
 
 export default function Hero() {
   return (
     <section
       id="cotacao"
-      className="relative flex items-center bg-gradient-to-br from-primary-dark via-primary to-accent overflow-hidden pt-24 pb-10 lg:pt-28 lg:pb-14"
+      className="relative bg-gradient-to-br from-primary-dark via-primary to-accent overflow-hidden pt-24 pb-12 lg:pt-24 lg:pb-16"
     >
       <div className="absolute inset-0 opacity-10"
         style={{
@@ -14,62 +27,44 @@ export default function Hero() {
         }}
       />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 w-full grid lg:grid-cols-2 gap-10 lg:gap-12 items-center">
-        {/* Lado esquerdo: apresentação */}
-        <div className="max-w-xl">
-          <Logo theme="light" size="md" className="mb-6" />
-
-          <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-md px-4 py-2 rounded-full text-white text-sm font-medium mb-5 border border-white/20">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 w-full grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-x-12 lg:gap-y-6">
+        {/* Texto — sempre primeiro, logo abaixo do header */}
+        <div className="order-1 lg:order-none lg:col-start-1 lg:row-start-1 max-w-xl">
+          <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-md px-4 py-2 rounded-full text-white text-sm font-medium mb-4 border border-white/20">
             <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
             </svg>
             Mais de 30 anos de experiência
           </div>
 
-          <h1 className="text-3xl sm:text-4xl lg:text-[44px] font-extrabold text-white leading-[1.1] mb-4 tracking-tight">
+          <h1 className="text-3xl sm:text-4xl lg:text-[42px] font-extrabold text-white leading-[1.1] mb-3 tracking-tight">
             PROTEGEMOS O QUE É MAIS IMPORTANTE PARA <span className="text-blue-300">VOCÊ.</span>
           </h1>
 
-          <p className="text-base lg:text-lg text-white/85 leading-relaxed mb-6">
+          <p className="text-base lg:text-lg text-white/85 leading-relaxed">
             Há mais de 30 anos trazendo tranquilidade e segurança para famílias e empresas em Joinville e região. Faça sua cotação agora mesmo, sem compromisso.
           </p>
+        </div>
 
-          <div className="hidden sm:flex flex-wrap gap-6 lg:gap-8">
-            {[
-              { icon: 'user', text: 'Atendimento\npersonalizado' },
-              { icon: 'shield', text: 'As melhores\nseguradoras' },
-              { icon: 'users', text: 'Soluções para\nvocê e sua família' },
-            ].map((f) => (
-              <div key={f.icon} className="flex items-center gap-3 text-white/90 text-sm font-medium">
-                <div className="w-9 h-9 bg-white/15 rounded-lg flex items-center justify-center flex-shrink-0">
-                  {f.icon === 'user' && (
-                    <svg className="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
-                    </svg>
-                  )}
-                  {f.icon === 'shield' && (
-                    <svg className="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                    </svg>
-                  )}
-                  {f.icon === 'users' && (
-                    <svg className="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
-                      <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                    </svg>
-                  )}
-                </div>
-                <span className="whitespace-pre-line leading-snug">{f.text}</span>
-              </div>
-            ))}
+        {/* Formulário — ocupa a coluna direita inteira (as duas "linhas" da esquerda) */}
+        <div className="order-2 lg:order-none lg:col-start-2 lg:row-start-1 lg:row-span-2 flex">
+          <div className="bg-white rounded-2xl shadow-2xl overflow-hidden w-full h-full">
+            <QuoteForm compact showHeading />
           </div>
         </div>
 
-        {/* Lado direito: formulário de cotação, já visível na primeira dobra */}
-        <div className="w-full">
-          <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
-            <QuoteForm compact showHeading />
-          </div>
+        {/* Fotografia — preenche o espaço restante abaixo do texto, sem deixar vazio */}
+        <div className="order-3 lg:order-none lg:col-start-1 lg:row-start-2 relative rounded-2xl overflow-hidden h-52 sm:h-64 lg:h-auto">
+          <img
+            src={HERO_IMAGE_URL}
+            alt="Pai carregando a filha no colo ao ar livre, transmitindo proteção e cuidado com a família"
+            className="w-full h-full object-cover"
+            loading="lazy"
+          />
+          {/* Overlay para integrar a fotografia ao fundo azul do Hero */}
+          <div className="absolute inset-0 bg-gradient-to-t from-primary-dark via-primary-dark/30 to-transparent" />
+          <div className="absolute inset-0 bg-primary-dark/15 mix-blend-multiply" />
+          <div className="absolute inset-x-0 top-0 h-10 bg-gradient-to-b from-primary/70 to-transparent" />
         </div>
       </div>
     </section>
