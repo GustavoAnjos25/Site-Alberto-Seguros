@@ -136,3 +136,14 @@
 .animate-scale-in {
   animation: scaleIn 0.5s ease 0.2s both;
 }
+
+/* Botão flutuante de WhatsApp — pulso extremamente sutil, só para chamar
+   discretamente a atenção sem parecer um elemento piscando. */
+@keyframes whatsappPulse {
+  0%, 100% { box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.25), 0 0 0 0 rgba(37, 211, 102, 0.35); }
+  50% { box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.25), 0 0 0 8px rgba(37, 211, 102, 0); }
+}
+
+.animate-whatsapp-pulse {
+  animation: whatsappPulse 2.8s ease-in-out infinite;
+}

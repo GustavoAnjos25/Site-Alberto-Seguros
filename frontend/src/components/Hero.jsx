@@ -27,7 +27,7 @@ export default function Hero() {
         }}
       />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 w-full grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-x-12 lg:gap-y-6">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 w-full grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-x-14 lg:gap-y-6">
         {/* Texto — sempre primeiro, logo abaixo do header */}
         <div className="order-1 lg:order-none lg:col-start-1 lg:row-start-1 max-w-xl">
           <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-md px-4 py-2 rounded-full text-white text-sm font-medium mb-4 border border-white/20">
@@ -37,7 +37,7 @@ export default function Hero() {
             Mais de 30 anos de experiência
           </div>
 
-          <h1 className="text-3xl sm:text-4xl lg:text-[42px] font-extrabold text-white leading-[1.1] mb-3 tracking-tight">
+          <h1 className="text-3xl sm:text-4xl lg:text-[46px] font-extrabold text-white leading-[1.05] mb-4 tracking-tight">
             PROTEGEMOS O QUE É MAIS IMPORTANTE PARA <span className="text-blue-300">VOCÊ.</span>
           </h1>
 
@@ -53,18 +53,30 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* Fotografia — preenche o espaço restante abaixo do texto, sem deixar vazio */}
-        <div className="order-3 lg:order-none lg:col-start-1 lg:row-start-2 relative rounded-2xl overflow-hidden h-52 sm:h-64 lg:h-auto">
-          <img
-            src={HERO_IMAGE_URL}
-            alt="Pai carregando a filha no colo ao ar livre, transmitindo proteção e cuidado com a família"
-            className="w-full h-full object-cover"
-            loading="lazy"
-          />
-          {/* Overlay para integrar a fotografia ao fundo azul do Hero */}
-          <div className="absolute inset-0 bg-gradient-to-t from-primary-dark via-primary-dark/30 to-transparent" />
-          <div className="absolute inset-0 bg-primary-dark/15 mix-blend-multiply" />
-          <div className="absolute inset-x-0 top-0 h-10 bg-gradient-to-b from-primary/70 to-transparent" />
+        {/* Fotografia — integrada ao Hero, não um bloco retangular solto */}
+        <div className="order-3 lg:order-none lg:col-start-1 lg:row-start-2 relative h-52 sm:h-64 lg:h-auto lg:-mt-2">
+          {/* Brilho suave atrás da foto, dá profundidade sem chamar atenção */}
+          <div className="absolute -inset-4 lg:-inset-6 bg-blue-300/20 blur-3xl rounded-full pointer-events-none" aria-hidden="true" />
+
+          <div
+            className="relative w-full h-full overflow-hidden shadow-[0_20px_50px_-15px_rgba(6,20,45,0.55)]"
+            style={{
+              borderRadius: '2.5rem 1rem 2.5rem 1rem',
+              WebkitMaskImage: 'linear-gradient(180deg, transparent 0%, black 12%, black 100%)',
+              maskImage: 'linear-gradient(180deg, transparent 0%, black 12%, black 100%)',
+            }}
+          >
+            <img
+              src={HERO_IMAGE_URL}
+              alt="Pai carregando a filha no colo ao ar livre, transmitindo proteção e cuidado com a família"
+              className="w-full h-full object-cover"
+              style={{ objectPosition: '50% 25%' }}
+              loading="lazy"
+            />
+            {/* Sobreposição azul da marca, para integrar a foto à paleta do Hero */}
+            <div className="absolute inset-0 bg-gradient-to-t from-primary-dark/60 via-primary-dark/10 to-transparent" />
+            <div className="absolute inset-0 bg-primary-dark/10 mix-blend-multiply" />
+          </div>
         </div>
       </div>
     </section>

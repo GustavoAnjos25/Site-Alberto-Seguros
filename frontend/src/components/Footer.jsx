@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import Logo from './Logo'
+import { CONTACT, whatsappLink, mailtoLink } from '../data/contact'
 
 const navLinks = [
   { label: 'Início', to: '/' },
@@ -53,7 +54,16 @@ export default function Footer() {
             <h4 className="text-sm font-bold uppercase tracking-wider mb-5">Contato</h4>
             <ul className="space-y-3 text-sm text-slate-400">
               <li>Joinville - SC</li>
-              <li>contato@albertoseguros.com</li>
+              <li>
+                <a href={whatsappLink()} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+                  WhatsApp: {CONTACT.whatsappDisplay}
+                </a>
+              </li>
+              <li>
+                <a href={mailtoLink()} className="hover:text-white transition-colors">
+                  {CONTACT.email}
+                </a>
+              </li>
               <li className="pt-2">
                 <Link to="/seguros" className="btn-primary text-xs py-2.5 px-5">
                   Solicitar Cotação

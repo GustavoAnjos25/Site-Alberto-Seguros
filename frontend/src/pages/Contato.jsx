@@ -1,15 +1,27 @@
 import { Link } from 'react-router-dom'
 import PageHeader from '../components/PageHeader'
+import { CONTACT, whatsappLink, mailtoLink } from '../data/contact'
 
 const canais = [
   {
     title: 'E-mail',
-    value: 'contato@albertoseguros.com',
-    href: 'mailto:contato@albertoseguros.com',
+    value: CONTACT.email,
+    href: mailtoLink(),
     icon: (
       <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
         <path d="M4 4h16v16H4z" opacity="0"/>
         <rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/>
+      </svg>
+    ),
+  },
+  {
+    title: 'WhatsApp',
+    value: CONTACT.whatsappDisplay,
+    href: whatsappLink(),
+    external: true,
+    icon: (
+      <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5 8.4 8.4 0 0 1-4-1L3 20l1-5.4a8.4 8.4 0 0 1-1-4A8.5 8.5 0 0 1 11.5 2a8.5 8.5 0 0 1 8.5 8.5z"/>
       </svg>
     ),
   },
@@ -20,16 +32,6 @@ const canais = [
     icon: (
       <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
         <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
-      </svg>
-    ),
-  },
-  {
-    title: 'WhatsApp',
-    value: 'Fale com um consultor',
-    href: '#cotacao',
-    icon: (
-      <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-        <path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5 8.4 8.4 0 0 1-4-1L3 20l1-5.4a8.4 8.4 0 0 1-1-4A8.5 8.5 0 0 1 11.5 2a8.5 8.5 0 0 1 8.5 8.5z"/>
       </svg>
     ),
   },
@@ -53,6 +55,7 @@ export default function Contato() {
                 <Wrapper
                   key={c.title}
                   {...(c.href ? { href: c.href } : {})}
+                  {...(c.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                   className="bg-slate-50 border border-slate-200 rounded-2xl p-6 text-center hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
                 >
                   <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mx-auto mb-3 text-primary">

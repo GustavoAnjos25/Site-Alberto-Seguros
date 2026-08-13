@@ -4,6 +4,7 @@ import { Toaster } from 'react-hot-toast'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import ScrollToTop from './components/ScrollToTop'
+import WhatsAppButton from './components/WhatsAppButton'
 import Home from './pages/Home'
 import Empresa from './pages/Empresa'
 import Seguros from './pages/Seguros'
@@ -54,6 +55,7 @@ function App() {
           </Routes>
         </main>
         <Footer />
+        <WhatsAppButton />
       </div>
     </BrowserRouter>
   )
