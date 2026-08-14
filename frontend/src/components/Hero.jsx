@@ -53,8 +53,9 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* Fotografia — integrada ao Hero, não um bloco retangular solto */}
-        <div className="order-3 lg:order-none lg:col-start-1 lg:row-start-2 relative h-52 sm:h-64 lg:h-auto lg:-mt-2">
+        {/* Fotografia — altura própria e independente do formulário (não deve
+            esticar/crescer quando o formulário ganha mais campos). */}
+        <div className="order-3 lg:order-none lg:col-start-1 lg:row-start-2 lg:self-start relative h-52 sm:h-64 lg:h-72 xl:h-80 lg:-mt-2">
           {/* Brilho suave atrás da foto, dá profundidade sem chamar atenção */}
           <div className="absolute -inset-4 lg:-inset-6 bg-blue-300/20 blur-3xl rounded-full pointer-events-none" aria-hidden="true" />
 
