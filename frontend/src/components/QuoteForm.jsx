@@ -281,9 +281,9 @@ export default function QuoteForm({ compact = false, showHeading = true, classNa
     'data-pixel': `radio_${name}_${value.toLowerCase().replace(/\s/g, '_')}`,
   })
 
-  const cardPad = compact ? 'p-5 sm:p-6' : 'p-10 lg:p-12'
-  const blockPad = compact ? 'p-4' : 'p-6'
-  const gapY = compact ? 'mb-4' : 'mb-5'
+  const cardPad = compact ? 'px-5 sm:px-6 pt-2 pb-6 sm:pb-7' : 'p-10 lg:p-12'
+  const blockPad = compact ? 'p-4 sm:p-5' : 'p-6 sm:p-7'
+  const gapY = compact ? 'mb-5' : 'mb-6'
 
   if (submitted) {
     return (
@@ -305,9 +305,17 @@ export default function QuoteForm({ compact = false, showHeading = true, classNa
   }
 
   return (
-    <div className={className}>
+    <div className={className} data-quote-form>
       {showHeading && (
-        <div className={`text-center ${compact ? 'mb-6' : 'py-12 px-6 bg-gradient-to-b from-slate-50 to-white'}`}>
+        <div className={compact
+          ? 'text-center px-5 sm:px-6 pt-7 sm:pt-8 pb-3'
+          : 'text-center pt-12 pb-8 px-6 bg-gradient-to-b from-slate-50 to-white'
+        }>
+          <div className={`inline-flex items-center justify-center ${compact ? 'w-10 h-10 mb-2.5' : 'w-14 h-14 mb-4'} bg-primary/10 rounded-xl text-primary`}>
+            <svg className={compact ? 'w-5 h-5' : 'w-7 h-7'} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            </svg>
+          </div>
           <h2 className={`${compact ? 'text-xl' : 'text-3xl'} font-bold text-slate-900 mb-2`}>Solicite sua Cotação</h2>
           {!compact && (
             <p className="text-slate-500 max-w-xl mx-auto">
@@ -320,13 +328,13 @@ export default function QuoteForm({ compact = false, showHeading = true, classNa
       <form onSubmit={handleSubmit} noValidate className={cardPad}>
         <div className={gapY}>
           <label className="form-label">Qual seguro você procura? <span className="text-red-500">*</span></label>
-          <div className={`grid grid-cols-2 ${compact ? 'sm:grid-cols-4' : 'sm:grid-cols-4'} gap-2.5`}>
+          <div className={`grid grid-cols-2 sm:grid-cols-4 gap-3`}>
             {insuranceTypes.map((type) => {
               const Icon = iconMap[type.id]
               return (
                 <div
                   key={type.id}
-                  className={`insurance-card ${compact ? 'p-3' : ''} ${tipoSeguro === type.id ? 'selected' : ''}`}
+                  className={`insurance-card ${compact ? 'p-3.5' : 'p-4'} ${tipoSeguro === type.id ? 'selected' : ''}`}
                   onClick={() => handleSelectInsurance(type.id)}
                   data-pixel={`seguro_${type.id}`}
                 >

@@ -35,26 +35,26 @@ export default function Header({ mobileMenuOpen, setMobileMenuOpen }) {
         solid ? 'bg-white/95 backdrop-blur-xl shadow-sm border-b border-slate-200' : 'bg-transparent'
       }`}>
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-3">
+          <Link to="/" className="flex items-center gap-3 py-2">
             <Logo theme={solid ? 'dark' : 'light'} size="sm" />
           </Link>
 
-          <nav className="hidden lg:flex items-center gap-1">
+          <nav className="hidden lg:flex items-center gap-1.5">
             {navLinks.map((link) => (
               <NavLink
                 key={link.label}
                 to={link.to}
                 end={link.to === '/'}
-                className={({ isActive }) => `px-4 py-2.5 text-[13px] font-medium uppercase tracking-wide rounded-xl transition-all ${
+                className={({ isActive }) => `px-4 py-2.5 text-[13px] font-semibold uppercase tracking-wide rounded-xl transition-all ${
                   isActive
-                    ? (solid ? 'text-primary' : 'text-white')
+                    ? (solid ? 'text-primary bg-primary/5' : 'text-white bg-white/10')
                     : (solid ? 'text-slate-600 hover:text-primary hover:bg-slate-50' : 'text-white/80 hover:text-white hover:bg-white/10')
                 }`}
               >
                 {link.label}
               </NavLink>
             ))}
-            <Link to="/seguros" className="btn-primary ml-2 text-xs">
+            <Link to="/seguros" className="btn-primary ml-3 text-xs py-3 px-6">
               Faça sua Cotação!
             </Link>
           </nav>
