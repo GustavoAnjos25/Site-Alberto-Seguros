@@ -56,13 +56,13 @@ export default function Contato() {
                   key={c.title}
                   {...(c.href ? { href: c.href } : {})}
                   {...(c.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                  className="bg-slate-50 border border-slate-200 rounded-2xl p-6 text-center hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+                  className="min-w-0 bg-slate-50 border border-slate-200 rounded-2xl p-6 text-center hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
                 >
                   <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mx-auto mb-3 text-primary">
                     {c.icon}
                   </div>
                   <h4 className="text-sm font-bold text-slate-900 mb-1">{c.title}</h4>
-                  <p className="text-sm text-slate-500">{c.value}</p>
+                  <p className="text-sm text-slate-500 break-all px-1">{c.value}</p>
                 </Wrapper>
               )
             })}

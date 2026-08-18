@@ -1,50 +1,62 @@
 import { useState } from 'react'
 
 /**
- * Componente de Logo da Alberto Seguros.
+ * Logo oficial da Alberto Seguros.
  *
- * Procura pelo arquivo oficial em /public/brand/logo-alberto-seguros.svg.
- * Caso o arquivo ainda não tenha sido adicionado ao projeto, exibe
- * automaticamente um selo (badge) com "A" + nome da corretora, mantendo
- * a proporção e o espaço reservados para quando a logo oficial for enviada.
+ * Usa SEMPRE o arquivo exato fornecido (/public/brand/logo-alberto-seguros.png
+ * — ícone + nome já desenhados juntos), sem recriar texto, sem recortar,
+ * sem substituir por versão própria.
  *
- * Para usar a logo oficial: adicione o arquivo em
- * frontend/public/brand/logo-alberto-seguros.svg (ou .png)
- * que ele passará a ser exibido automaticamente, sem nenhuma alteração de código.
+ * A única adaptação é puramente técnica: como a imagem tem o nome escrito em
+ * azul-marinho (feito para fundo claro), colocamos uma "plaquinha" branca
+ * atrás dela quando o fundo é escuro (header transparente sobre o Hero,
+ * rodapé) para o logo continuar legível — a imagem em si nunca é alterada.
  */
 export default function Logo({ theme = 'light', size = 'md', className = '' }) {
   const [imgFailed, setImgFailed] = useState(false)
 
   const sizes = {
-    sm: { badge: 'w-9 h-9 text-lg', title: 'text-sm', sub: 'text-[9px] tracking-[1.5px]', img: 'h-9' },
-    md: { badge: 'w-12 h-12 text-2xl', title: 'text-lg', sub: 'text-xs tracking-[2px]', img: 'h-11' },
-    lg: { badge: 'w-16 h-16 text-3xl', title: 'text-2xl', sub: 'text-sm tracking-[2.5px]', img: 'h-14' },
+    sm: 'h-12',
+    md: 'h-16',
+    lg: 'h-20',
   }
-  const s = sizes[size] || sizes.md
+  const h = sizes[size] || sizes.md
 
-  if (!imgFailed) {
+  if (imgFailed) {
+    // Fallback apenas se o arquivo for removido do projeto por engano.
+    const titleColor = theme === 'light' ? 'text-white' : 'text-primary'
+    const subColor = theme === 'light' ? 'text-white/70' : 'text-slate-500'
     return (
-      <img
-        src="/brand/logo-alberto-seguros.svg"
-        alt="Alberto Seguros"
-        className={`${s.img} w-auto object-contain ${className}`}
-        onError={() => setImgFailed(true)}
-      />
+      <div className={`flex items-center gap-3 ${className}`}>
+        <div className="w-11 h-11 bg-primary rounded-full flex items-center justify-center text-white font-extrabold flex-shrink-0">
+          A
+        </div>
+        <div className="flex flex-col leading-tight">
+          <span className={`font-bold text-lg ${titleColor} tracking-wide leading-tight`}>ALBERTO</span>
+          <span className={`font-medium text-xs uppercase tracking-[2px] ${subColor}`}>SEGUROS</span>
+        </div>
+      </div>
     )
   }
 
-  const titleColor = theme === 'light' ? 'text-white' : 'text-primary'
-  const subColor = theme === 'light' ? 'text-white/70' : 'text-slate-500'
-
-  return (
-    <div className={`flex items-center gap-3 ${className}`}>
-      <div className={`${s.badge} bg-primary rounded-full flex items-center justify-center text-white font-extrabold flex-shrink-0`}>
-        A
-      </div>
-      <div className="flex flex-col leading-tight">
-        <span className={`font-bold ${s.title} ${titleColor} tracking-wide leading-tight`}>ALBERTO</span>
-        <span className={`font-medium ${s.sub} uppercase ${subColor}`}>SEGUROS</span>
-      </div>
-    </div>
+  const img = (
+    <img
+      src="/brand/logo-alberto-seguros.png"
+      alt="Alberto Seguros"
+      className={`${h} w-auto object-contain`}
+      onError={() => setImgFailed(true)}
+    />
   )
+
+  if (theme === 'light') {
+    // Fundo escuro atrás do logo: plaquinha branca só para legibilidade,
+    // a imagem do logo em si continua 100% intacta.
+    return (
+      <div className={`inline-flex items-center bg-white/95 backdrop-blur-sm rounded-xl px-2.5 py-1.5 shadow-sm ${className}`}>
+        {img}
+      </div>
+    )
+  }
+
+  return <div className={`inline-flex items-center ${className}`}>{img}</div>
 }

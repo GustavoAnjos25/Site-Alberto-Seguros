@@ -58,7 +58,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          <div>
+          <div className="min-w-0">
             <h4 className="text-sm font-bold uppercase tracking-wider mb-5 text-white">Contato</h4>
             <ul className="space-y-3.5 text-sm text-slate-400">
               <li className="flex items-center gap-2.5">
@@ -75,11 +75,11 @@ export default function Footer() {
                   {CONTACT.whatsappDisplay}
                 </a>
               </li>
-              <li className="flex items-center gap-2.5">
-                <svg className="w-4 h-4 text-primary-light flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <li className="flex items-start gap-2.5 min-w-0">
+                <svg className="w-4 h-4 text-primary-light flex-shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/>
                 </svg>
-                <a href={mailtoLink()} className="hover:text-white transition-colors text-[11px] sm:text-xs break-all leading-snug">
+                <a href={mailtoLink()} className="hover:text-white transition-colors text-xs break-all leading-snug min-w-0">
                   {CONTACT.email}
                 </a>
               </li>
