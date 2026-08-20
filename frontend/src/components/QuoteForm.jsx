@@ -3,6 +3,7 @@ import toast from 'react-hot-toast'
 import { usePixel } from '../hooks/usePixel'
 import { formatCPF, formatCEP, formatPhone, formatCNPJ, validateCPF, validateCEP, validatePhone } from '../utils/formatters'
 import { sendCotacao } from '../services/emailService.js'
+import { whatsappLink } from '../data/contact'
 
 const insuranceTypes = [
   { id: 'auto', label: 'Automóvel' },
@@ -119,6 +120,7 @@ const initialFormData = {
   cnpj_saude: '', quantidade_funcionarios: '',
   pais_destino: '', data_ida: '', data_volta: '', quantidade_viajantes: '',
   nome_empresa: '', cnpj_empresarial: '', ramo_atividade: '',
+  hp_website: '', // honeypot anti-spam — nunca preenchido por uma pessoa
 }
 
 /**
@@ -130,9 +132,10 @@ const initialFormData = {
  * Props:
  * - compact: reduz paddings/tamanhos para caber ao lado do Hero.
  * - showHeading: exibe (ou não) o título "Solicite sua Cotação".
- * - onSuccess: callback opcional chamado após envio com sucesso.
+ * - origin: identifica de qual página veio o lead (aparece no e-mail como
+ *   "Origem: ..."). Ex.: "Home", "Seguros / Cotações".
  */
-export default function QuoteForm({ compact = false, showHeading = true, className = '' }) {
+export default function QuoteForm({ compact = false, showHeading = true, className = '', origin = 'Seguros / Cotações' }) {
   const { track } = usePixel()
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -234,17 +237,16 @@ export default function QuoteForm({ compact = false, showHeading = true, classNa
 
     setLoading(true)
     try {
-      const payload = { ...formData, tipo_seguro: tipoSeguro }
+      const payload = { ...formData, tipo_seguro: tipoSeguro, origem: origin }
       const data = await sendCotacao(payload)
       if (data.success) {
         setSubmitted(true)
-        toast.success('Cotação enviada com sucesso!')
         track('formulario_enviado', { tipo_seguro: tipoSeguro })
       } else {
-        toast.error(data.message || 'Erro ao enviar')
+        toast.error(data.message || 'Não foi possível enviar sua cotação. Tente novamente ou fale diretamente conosco pelo WhatsApp.')
       }
     } catch (err) {
-      toast.error('Erro de conexão. Tente novamente.')
+      toast.error('Não foi possível enviar sua cotação. Tente novamente ou fale diretamente conosco pelo WhatsApp.')
     } finally {
       setLoading(false)
     }
@@ -293,13 +295,27 @@ export default function QuoteForm({ compact = false, showHeading = true, classNa
             <polyline points="20 6 9 17 4 12" />
           </svg>
         </div>
-        <h3 className={`${compact ? 'text-lg' : 'text-2xl'} font-bold text-slate-900 mb-2`}>Sua solicitação foi enviada com sucesso!</h3>
+        <h3 className={`${compact ? 'text-lg' : 'text-2xl'} font-bold text-slate-900 mb-2`}>Cotação enviada com sucesso!</h3>
         <p className="text-slate-500 max-w-md mx-auto mb-6 text-sm">
-          Em breve nossa equipe entrará em contato para apresentar sua cotação.
+          Recebemos suas informações. Nossa equipe entrará em contato em breve.
         </p>
-        <button onClick={resetForm} className="btn-secondary bg-slate-100 text-slate-700 font-semibold px-8 py-3.5 rounded-2xl hover:bg-slate-200 transition-colors">
-          Enviar nova cotação
-        </button>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+          <a
+            href={whatsappLink('Olá! Acabei de solicitar uma cotação pelo site da Alberto Seguros.')}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center gap-2 bg-[#25D366] text-white font-semibold px-6 py-3.5 rounded-2xl hover:brightness-105 transition-all w-full sm:w-auto"
+          >
+            <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor" aria-hidden="true">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+              <path d="M12.001 2C6.478 2 2 6.477 2 12c0 1.892.526 3.66 1.438 5.166L2 22l4.958-1.412A9.953 9.953 0 0 0 12.001 22C17.524 22 22 17.523 22 12S17.524 2 12.001 2zm0 18.2a8.166 8.166 0 0 1-4.412-1.284l-.316-.19-3.11.886.897-3.06-.207-.315A8.19 8.19 0 1 1 20.2 12c0 4.522-3.678 8.2-8.199 8.2z"/>
+            </svg>
+            Falar pelo WhatsApp
+          </a>
+          <button onClick={resetForm} className="bg-slate-100 text-slate-700 font-semibold px-6 py-3.5 rounded-2xl hover:bg-slate-200 transition-colors w-full sm:w-auto">
+            Enviar nova cotação
+          </button>
+        </div>
       </div>
     )
   }
@@ -326,6 +342,21 @@ export default function QuoteForm({ compact = false, showHeading = true, classNa
       )}
 
       <form onSubmit={handleSubmit} noValidate className={cardPad}>
+        {/* Honeypot anti-spam: invisível e inacessível para humanos (fora da
+            tela, tabIndex -1). Bots que preenchem todos os campos de um
+            formulário automaticamente caem nessa armadilha. */}
+        <div style={{ position: 'absolute', left: '-9999px', width: '1px', height: '1px', overflow: 'hidden' }} aria-hidden="true">
+          <label htmlFor="hp_website">Deixe este campo em branco</label>
+          <input
+            type="text"
+            id="hp_website"
+            name="hp_website"
+            tabIndex={-1}
+            autoComplete="off"
+            value={formData.hp_website}
+            onChange={(e) => handleChange('hp_website', e.target.value)}
+          />
+        </div>
         <div className={gapY}>
           <label className="form-label">Qual seguro você procura? <span className="text-red-500">*</span></label>
           <div className={`grid grid-cols-2 sm:grid-cols-4 gap-3`}>

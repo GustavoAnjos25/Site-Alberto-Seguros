@@ -92,7 +92,7 @@ export default function Hero() {
             baixo sem afetar texto/foto na coluna ao lado. */}
         <div className="order-2 lg:order-none lg:col-start-2">
           <div className="bg-white rounded-2xl shadow-2xl overflow-hidden w-full">
-            <QuoteForm compact showHeading />
+            <QuoteForm compact showHeading origin="Home" />
           </div>
         </div>
       </div>

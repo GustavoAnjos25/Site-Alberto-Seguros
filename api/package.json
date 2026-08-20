@@ -2,6 +2,6 @@
   "name": "alberto-seguros-api",
   "version": "1.0.0",
   "dependencies": {
-    "nodemailer": "^6.9.7"
+    "resend": "^6.20.0"
   }
 }
