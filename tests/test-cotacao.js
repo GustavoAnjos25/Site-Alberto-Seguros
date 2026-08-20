@@ -1,7 +1,7 @@
 process.env.RESEND_API_KEY = 're_test_fake_key_for_local_testing';
 
 const handler = require('../api/cotacao.js');
-const { buildFieldSections, buildEmail, validatePayload } = handler;
+const { buildFieldSections, buildEmail, validatePayload, resolveDestinatario, resolveRemetente } = handler;
 
 let passed = 0;
 let failed = 0;
@@ -305,6 +305,57 @@ section('Validação de payload');
   check('Rejeita e-mail malformado', validatePayload({ ...baseClient, email: 'não-é-email', tipo_seguro: 'outro' }).length > 0);
   check('Aceita payload válido completo', validatePayload({ ...baseClient, tipo_seguro: 'outro' }).length === 0);
   check('Aceita sem e-mail (opcional)', validatePayload({ ...baseClient, email: '', tipo_seguro: 'outro' }).length === 0);
+}
+
+// ---------------------------------------------------------------------------
+// 11. Resolução de RESEND_TO_EMAIL / RESEND_FROM_EMAIL a partir do ambiente
+//     (bug relatado: envio parou de funcionar após configurar essas vars)
+// ---------------------------------------------------------------------------
+section('RESEND_TO_EMAIL / RESEND_FROM_EMAIL — resolução a partir do ambiente');
+{
+  const savedTo = process.env.RESEND_TO_EMAIL;
+  const savedFrom = process.env.RESEND_FROM_EMAIL;
+
+  // Sem as variáveis definidas -> usa os padrões fixos
+  delete process.env.RESEND_TO_EMAIL;
+  delete process.env.RESEND_FROM_EMAIL;
+  check('Sem RESEND_TO_EMAIL, usa o padrão fixo', resolveDestinatario() === 'albertolseguros@albertoseguros.com');
+  check('Sem RESEND_FROM_EMAIL, usa o remetente padrão do Resend', resolveRemetente() === 'Alberto Seguros <onboarding@resend.dev>');
+
+  // Caso relatado pelo usuário: falta os sinais "<" ">" ao redor do e-mail
+  process.env.RESEND_FROM_EMAIL = 'Alberto Seguros cotacoes@albertoseguros.com';
+  check(
+    'RESEND_FROM_EMAIL sem "< >" é corrigido automaticamente',
+    resolveRemetente() === 'Alberto Seguros <cotacoes@albertoseguros.com>'
+  );
+
+  // Formato já correto, com "< >"
+  process.env.RESEND_FROM_EMAIL = 'Alberto Seguros <cotacoes@albertoseguros.com>';
+  check('RESEND_FROM_EMAIL já no formato correto é preservado', resolveRemetente() === 'Alberto Seguros <cotacoes@albertoseguros.com>');
+
+  // Só o e-mail, sem nome de exibição
+  process.env.RESEND_FROM_EMAIL = 'cotacoes@albertoseguros.com';
+  check('RESEND_FROM_EMAIL só com e-mail (sem nome) é aceito', resolveRemetente() === 'cotacoes@albertoseguros.com');
+
+  // Valor claramente inválido -> cai pro padrão, não derruba o envio
+  process.env.RESEND_FROM_EMAIL = 'isso não é um email';
+  check('RESEND_FROM_EMAIL inválido cai para o padrão', resolveRemetente() === 'Alberto Seguros <onboarding@resend.dev>');
+
+  // RESEND_TO_EMAIL válido é usado
+  process.env.RESEND_TO_EMAIL = 'destino@teste.com';
+  check('RESEND_TO_EMAIL válido é usado como destinatário', resolveDestinatario() === 'destino@teste.com');
+
+  // RESEND_TO_EMAIL inválido -> cai pro padrão fixo, não quebra o envio
+  process.env.RESEND_TO_EMAIL = 'não é um email';
+  check('RESEND_TO_EMAIL inválido cai para o padrão fixo', resolveDestinatario() === 'albertolseguros@albertoseguros.com');
+
+  // RESEND_TO_EMAIL vazia (string em branco) -> cai pro padrão
+  process.env.RESEND_TO_EMAIL = '   ';
+  check('RESEND_TO_EMAIL em branco cai para o padrão fixo', resolveDestinatario() === 'albertolseguros@albertoseguros.com');
+
+  // Restaura o ambiente original
+  if (savedTo === undefined) delete process.env.RESEND_TO_EMAIL; else process.env.RESEND_TO_EMAIL = savedTo;
+  if (savedFrom === undefined) delete process.env.RESEND_FROM_EMAIL; else process.env.RESEND_FROM_EMAIL = savedFrom;
 }
 
 // ---------------------------------------------------------------------------

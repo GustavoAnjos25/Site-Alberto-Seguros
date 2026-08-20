@@ -37,7 +37,7 @@ const pilares = [
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
       </svg>
     ),
-    text: 'Conteúdo a ser definido pela Alberto Seguros.',
+    text: 'Oferecer proteção e segurança por meio de soluções personalizadas, com atendimento próximo e de confiança.',
   },
   {
     title: 'Visão',
@@ -46,7 +46,7 @@ const pilares = [
         <circle cx="12" cy="12" r="3" /><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" />
       </svg>
     ),
-    text: 'Conteúdo a ser definido pela Alberto Seguros.',
+    text: 'Ser referência em seguros em Joinville e região, reconhecida pela excelência, transparência e relacionamento com nossos clientes.',
   },
   {
     title: 'Valores',
@@ -55,7 +55,7 @@ const pilares = [
         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
       </svg>
     ),
-    text: 'Conteúdo a ser definido pela Alberto Seguros.',
+    text: 'Ética, confiança, transparência, compromisso e respeito em cada relacionamento.',
   },
 ]
 
@@ -152,9 +152,12 @@ export default function Empresa() {
             <h2 className="text-[28px] sm:text-3xl font-bold text-slate-900 mb-5 leading-[1.25] tracking-tight">
               Décadas de experiência cuidando do que é importante para você
             </h2>
-            <p className="text-slate-500 text-[15px] leading-relaxed italic mb-7">
-              [Conteúdo institucional a ser fornecido pela Alberto Seguros — história
-              da corretora, marcos e trajetória ao longo dos mais de 30 anos de atuação.]
+            <p className="text-slate-500 text-[15px] leading-relaxed mb-7">
+              Há mais de 30 anos, a Alberto Seguros constrói sua trajetória com
+              confiança, experiência e relacionamento. Acompanhamos as
+              transformações do mercado para oferecer soluções adequadas às
+              necessidades de cada cliente, sempre com atendimento próximo e
+              personalizado.
             </p>
             <ul className="space-y-4 mb-8">
               {highlights.map((h) => (
@@ -228,7 +231,7 @@ export default function Empresa() {
                   {p.icon}
                 </div>
                 <h3 className="text-lg font-bold text-slate-900 mb-2.5 tracking-tight">{p.title}</h3>
-                <p className="text-sm text-slate-400 italic leading-relaxed max-w-[220px] mx-auto">{p.text}</p>
+                <p className="text-sm text-slate-500 leading-relaxed max-w-[220px] mx-auto">{p.text}</p>
               </div>
             ))}
           </div>

@@ -1,17 +1,94 @@
 const { Resend } = require('resend');
 
-// Destinatário fixo — todas as cotações do site, de qualquer formulário,
-// vão sempre para este endereço. Não é configurável por variável de
-// ambiente de propósito, para nunca ser enviado para outro lugar por engano.
-const DESTINATARIO = 'albertolseguros@albertoseguros.com';
+// Destinatário: usa RESEND_TO_EMAIL quando configurada na Vercel; se não
+// estiver definida (ou vier vazia/mal formatada), cai para o endereço fixo
+// abaixo — assim o envio nunca fica "sem destino" por falta de configuração.
+const DESTINATARIO_PADRAO = 'albertolseguros@albertoseguros.com';
 
-// Remetente: usa o domínio verificado no Resend quando configurado
-// (RESEND_FROM_EMAIL, ex: "Alberto Seguros <cotacoes@albertoseguros.com>").
-// Enquanto o domínio não estiver verificado no Resend, cai para o
-// domínio de testes deles, que funciona imediatamente sem configuração.
-const REMETENTE = process.env.RESEND_FROM_EMAIL || 'Alberto Seguros <onboarding@resend.dev>';
+// Remetente padrão enquanto o domínio albertoseguros.com não estiver
+// verificado no Resend (ou se RESEND_FROM_EMAIL vier vazia/mal formatada).
+const REMETENTE_PADRAO = 'Alberto Seguros <onboarding@resend.dev>';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
+
+// ---------------------------------------------------------------------------
+// Validação/normalização de e-mail — usado tanto nos dados do formulário
+// quanto nas variáveis de ambiente RESEND_TO_EMAIL / RESEND_FROM_EMAIL.
+// ---------------------------------------------------------------------------
+
+function isValidEmailFormat(v) {
+  return typeof v === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
+}
+
+/**
+ * Resolve o endereço de destino a partir de RESEND_TO_EMAIL.
+ * Aceita um e-mail simples ("nome@dominio.com"). Se a variável não existir
+ * ou não for um e-mail válido, usa o padrão fixo e registra um aviso (sem
+ * nunca expor a API key).
+ */
+function resolveDestinatario() {
+  const raw = process.env.RESEND_TO_EMAIL;
+  if (!raw || !raw.trim()) {
+    return DESTINATARIO_PADRAO;
+  }
+  const trimmed = raw.trim();
+  if (isValidEmailFormat(trimmed)) {
+    return trimmed;
+  }
+  console.warn(
+    `[cotacao] RESEND_TO_EMAIL definida mas com formato inválido ("${trimmed}"). ` +
+    `Usando o destinatário padrão (${DESTINATARIO_PADRAO}) para não perder a cotação.`
+  );
+  return DESTINATARIO_PADRAO;
+}
+
+/**
+ * Resolve o remetente a partir de RESEND_FROM_EMAIL.
+ * Aceita tanto "nome@dominio.com" quanto o formato "Nome <nome@dominio.com>",
+ * que é o exigido pelo Resend quando se quer exibir um nome de exibição.
+ * Se vier só "Nome email@dominio.com" (sem os sinais < >, um erro comum ao
+ * colar no painel da Vercel), o valor é corrigido automaticamente.
+ * Se não for possível validar, cai para o remetente padrão do Resend.
+ */
+function resolveRemetente() {
+  const raw = process.env.RESEND_FROM_EMAIL;
+  if (!raw || !raw.trim()) {
+    return REMETENTE_PADRAO;
+  }
+  const trimmed = raw.trim();
+
+  // Já está no formato correto: "Nome <email@dominio.com>"
+  const bracketMatch = trimmed.match(/^(.*)<([^<>]+)>$/);
+  if (bracketMatch) {
+    const email = bracketMatch[2].trim();
+    if (isValidEmailFormat(email)) return trimmed;
+    console.warn(`[cotacao] RESEND_FROM_EMAIL com e-mail inválido dentro de "<...>" ("${trimmed}"). Usando remetente padrão.`);
+    return REMETENTE_PADRAO;
+  }
+
+  // Só um e-mail, sem nome de exibição: "email@dominio.com"
+  if (isValidEmailFormat(trimmed)) {
+    return trimmed;
+  }
+
+  // Formato comum de erro: "Nome email@dominio.com" (sem os < >).
+  // Extrai o último "token" se ele parecer um e-mail e reconstrói no
+  // formato correto, em vez de deixar o envio falhar por causa disso.
+  const parts = trimmed.split(/\s+/);
+  const lastToken = parts[parts.length - 1];
+  if (parts.length > 1 && isValidEmailFormat(lastToken)) {
+    const displayName = parts.slice(0, -1).join(' ');
+    const fixed = `${displayName} <${lastToken}>`;
+    console.warn(
+      `[cotacao] RESEND_FROM_EMAIL sem os sinais "<" ">" ao redor do e-mail ("${trimmed}"). ` +
+      `Corrigido automaticamente para "${fixed}". Ajuste a variável na Vercel para evitar este aviso.`
+    );
+    return fixed;
+  }
+
+  console.warn(`[cotacao] RESEND_FROM_EMAIL com formato não reconhecido ("${trimmed}"). Usando remetente padrão.`);
+  return REMETENTE_PADRAO;
+}
 
 const TIPO_LABELS = {
   auto: 'Automóvel',
@@ -32,10 +109,6 @@ const TIPOS_VALIDOS = Object.keys(TIPO_LABELS);
 
 function isNonEmptyString(v, maxLen = 500) {
   return typeof v === 'string' && v.trim().length > 0 && v.length <= maxLen;
-}
-
-function isValidEmailFormat(v) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 }
 
 function validatePayload(body) {
@@ -284,18 +357,23 @@ module.exports = async (req, res) => {
   }
 
   if (!process.env.RESEND_API_KEY) {
-    console.error('RESEND_API_KEY não configurada.');
+    console.error('[cotacao] RESEND_API_KEY não configurada nas variáveis de ambiente.');
     return res.status(500).json({ success: false, message: 'Não foi possível enviar sua cotação.' });
   }
 
   const origem = isNonEmptyString(body.origem, 60) ? body.origem : 'Site';
 
+  const remetente = resolveRemetente();
+  const destinatario = resolveDestinatario();
+
   try {
     const { subject, html, text } = buildEmail(body, origem);
 
-    const { error } = await resend.emails.send({
-      from: REMETENTE,
-      to: DESTINATARIO,
+    console.log(`[cotacao] Enviando e-mail — de: "${remetente}" | para: "${destinatario}" | tipo: ${body.tipo_seguro} | origem: ${origem}`);
+
+    const { data, error } = await resend.emails.send({
+      from: remetente,
+      to: destinatario,
       replyTo: isValidEmailFormat(body.email || '') ? body.email : undefined,
       subject,
       html,
@@ -303,13 +381,27 @@ module.exports = async (req, res) => {
     });
 
     if (error) {
-      console.error('Erro do Resend:', error);
+      // Loga o erro real do Resend (nome, mensagem, status) para diagnóstico
+      // no painel da Vercel — nunca inclui a API key, só a resposta da API.
+      console.error('[cotacao] Resend recusou o envio:', {
+        name: error.name,
+        message: error.message,
+        statusCode: error.statusCode,
+        from: remetente,
+        to: destinatario,
+      });
       return res.status(502).json({ success: false, message: 'Não foi possível enviar sua cotação.' });
     }
 
+    console.log(`[cotacao] E-mail enviado com sucesso. id: ${data && data.id}`);
     return res.status(200).json({ success: true, message: 'Cotação enviada com sucesso!' });
   } catch (err) {
-    console.error('Erro ao enviar cotação:', err);
+    console.error('[cotacao] Erro inesperado ao enviar cotação:', {
+      message: err && err.message,
+      name: err && err.name,
+      from: remetente,
+      to: destinatario,
+    });
     return res.status(500).json({ success: false, message: 'Não foi possível enviar sua cotação.' });
   }
 };
@@ -321,3 +413,5 @@ module.exports.buildEmail = buildEmail;
 module.exports.buildFieldSections = buildFieldSections;
 module.exports.validatePayload = validatePayload;
 module.exports.TIPO_LABELS = TIPO_LABELS;
+module.exports.resolveDestinatario = resolveDestinatario;
+module.exports.resolveRemetente = resolveRemetente;
